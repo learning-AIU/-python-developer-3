@@ -1,7 +1,22 @@
-line = input('Введите элементы списка через запятую: ')
-numbers = [
-    n_striped
-    for n in line.split(',')
-    if line.count(n_striped := n.strip()) < 2
-]
-print(', '.join(numbers))
+from re import fullmatch
+
+
+line = input('Введите элементы списка через запятую, точку с запятой или слэш: ')
+mo = fullmatch(r'\d+(?P<sep>[,;/])\d+((?P=sep)\d+)*', line)
+if mo:
+    numbers = [
+        n
+        for n in line.split(mo['sep'])
+        if line.count(n) < 2
+    ]
+    print(*numbers, sep=', ')
+else:
+    print('используйте одинаковый разделитель')
+
+
+# stdout:
+# Введите элементы списка через запятую, точку с запятой или слэш: 2;3;4/5;5;6;5;3;9
+# используйте одинаковый разделитель
+
+# Введите элементы списка через запятую, точку с запятой или слэш: 2/3/4/5/5/6/5/3/9
+# 2, 4, 6, 9
